@@ -117,7 +117,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function getItem($key)
+    public function getItem($key): CacheItemInterface
     {
         $this->validateKey($key);
         if (isset($this->deferred[$key])) {
@@ -142,7 +142,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function getItems(array $keys = [])
+    public function getItems(array $keys = []): iterable
     {
         $items = [];
         foreach ($keys as $key) {
@@ -155,7 +155,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function hasItem($key)
+    public function hasItem($key): bool
     {
         try {
             return $this->getItem($key)->isHit();
@@ -167,7 +167,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function clear()
+    public function clear(): bool
     {
         // Clear the deferred items
         $this->deferred = [];
@@ -182,7 +182,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function deleteItem($key)
+    public function deleteItem($key): bool
     {
         try {
             return $this->deleteItems([$key]);
@@ -194,7 +194,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function deleteItems(array $keys)
+    public function deleteItems(array $keys): bool
     {
         $deleted = true;
         foreach ($keys as $key) {
@@ -218,7 +218,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function save(CacheItemInterface $item)
+    public function save(CacheItemInterface $item): bool
     {
         if (!$item instanceof PhpCacheItem) {
             $e = new InvalidArgumentException('Cache items are not transferable between pools. Item MUST implement PhpCacheItem.');
@@ -246,7 +246,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function saveDeferred(CacheItemInterface $item)
+    public function saveDeferred(CacheItemInterface $item): bool
     {
         $this->deferred[$item->getKey()] = $item;
 
@@ -256,7 +256,7 @@ abstract class AbstractCachePool implements PhpCachePool, LoggerAwareInterface, 
     /**
      * {@inheritdoc}
      */
-    public function commit()
+    public function commit(): bool
     {
         $saved = true;
         foreach ($this->deferred as $item) {
