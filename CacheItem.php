@@ -102,7 +102,7 @@ class CacheItem implements PhpCacheItem
     public function get(): mixed
     {
         if (!$this->isHit()) {
-            return;
+            return null;
         }
 
         return $this->value;
